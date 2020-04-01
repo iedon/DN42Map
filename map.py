@@ -1,4 +1,4 @@
-#!/usr/local/sbin/python3
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
 import asyncio, json
@@ -23,9 +23,9 @@ except ImportError:
     pass
 
 
-_port = 8123
+_port = 8125
 _host_asn = 4242422189
-_root_directory = "C:/Users/iedon/Desktop/DN42Map"
+_root_directory = "/dev/shm"
 _registry = f"{_root_directory}/registry"
 _headers = {
     'Access-Control-Allow-Origin': 'http://map.dn42',
