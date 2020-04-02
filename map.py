@@ -57,17 +57,44 @@ app = web.Application(middlewares=[jsonFormat])
 router = web.RouteTableDef()
 
 
-async def getMntrNameyASN(asn):
+async def getDescByASN(asn):
     async with aiofiles.open(f"{_registry}/data/aut-num/AS{asn}", mode='r') as f:
+        admin_c = ''
+        mntr = ''
+        as_name = ''
+        descr = ''
         async for line in f:
             _line = line.strip()
+            kv = _line.split('admin-c:')
+            if len(kv) == 2:
+                admin_c = kv[1].strip()
+                continue
             kv = _line.split('mnt-by:')
             if len(kv) == 2:
-                return kv[1].strip()
+                mntr = kv[1].strip()
+                continue
+            kv = _line.split('as-name:')
+            if len(kv) == 2:
+                as_name = kv[1].strip()
+                continue
+            kv = _line.split('descr:')
+            if len(kv) == 2:
+                descr = kv[1].strip()
+                continue
+        if admin_c == mntr:
+            return mntr
+        elif admin_c != '':
+            return admin_c
+        elif admin_c == '' and as_name != '':
+            return as_name
+        elif admin_c == '' and as_name == '' and descr != '':
+            return descr
+        else:
+            return mntr
     return ''
 
 
-async def getMntWhoisByASN(asn):
+async def getWhoisByASN(asn):
     async with aiofiles.open(f"{_registry}/data/aut-num/AS{asn}", mode='r') as f:
         return await f.read()
 
@@ -79,7 +106,7 @@ async def checkAndAddASN(asnArr, asn):
     asnArr.append({
         'group': 1,
         'asn': int(asn),
-        'mnt': await getMntrNameyASN(asn)
+        'desc': await getDescByASN(asn)
     })
 
 
@@ -125,7 +152,7 @@ async def aspath(request):
 async def whois(request):
     body = json.loads(await request.read())
     return {
-        'whois': await getMntWhoisByASN(str(body['asn']))
+        'whois': await getWhoisByASN(str(body['asn']))
     }
 
 
@@ -151,7 +178,6 @@ async def updatePath():
                         await checkAndAddASN(asn, paths[i])
                         await checkAndAddASN(asn, paths[i + 1])
                         await checkAndAddLink(asn, links, paths[i], paths[i + 1])
-
                 _asn = asn
                 _links = links
         except:

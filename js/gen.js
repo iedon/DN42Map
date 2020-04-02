@@ -127,7 +127,7 @@ function gen() {
 
 		node.append("text").attr("dx", 12)
 			.attr("id", function(d) {
-				return '_' + d.mnt;
+				return '_' + d.desc;
 			})
 			.attr("class", "ntx")
 			.attr("dy", 0)
@@ -136,7 +136,7 @@ function gen() {
 			.style("font-weight", "bold")
 			.attr("class", "at")
 			.text(function(d) {
-				return d.mnt.replace('-MNT', '');
+				return d.desc.replace('-DN42', '').replace('-MNT', '').replace('-AS', '');
 			}) //.call(azoom);
 		
 

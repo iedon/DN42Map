@@ -105,7 +105,7 @@ function dasn(n, v, t) {
 				} else {
 					var url_regex = /(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|&|-)+)/g;
 					data.whois = data.whois.replace(url_regex, "<a href='$1$2' target='_blank'>$1$2</a>").replace(/\n/g, "<br/>");
-					_prefix = '<pre><a href="' + explorerHost + n + '" target="_blank">View all objects at Explorer</a><br/>'
+					_prefix = '<pre><a href="' + explorerHost + n + '" target="_blank">View all objects at Collector</a><br/>'
 					_suffix = '</pre>'
 					proceed = _prefix + data.whois + _suffix;
 					$('.wnfo').html(proceed);
