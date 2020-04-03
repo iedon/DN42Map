@@ -92,7 +92,9 @@ async def getDescByASN(asn):
                 return descr
             else:
                 return mntr
-    return f'AS{asn}'
+    except:
+        pass
+    return f"AS{asn}"
 
 
 async def getWhoisByASN(asn):
