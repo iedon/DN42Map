@@ -58,40 +58,41 @@ router = web.RouteTableDef()
 
 
 async def getDescByASN(asn):
-    async with aiofiles.open(f"{_registry}/data/aut-num/AS{asn}", mode='r') as f:
-        admin_c = ''
-        mntr = ''
-        as_name = ''
-        descr = ''
-        async for line in f:
-            _line = line.strip()
-            kv = _line.split('admin-c:')
-            if len(kv) == 2:
-                admin_c = kv[1].strip()
-                continue
-            kv = _line.split('mnt-by:')
-            if len(kv) == 2:
-                mntr = kv[1].strip()
-                continue
-            kv = _line.split('as-name:')
-            if len(kv) == 2:
-                as_name = kv[1].strip()
-                continue
-            kv = _line.split('descr:')
-            if len(kv) == 2:
-                descr = kv[1].strip()
-                continue
-        if admin_c == mntr:
-            return mntr
-        elif admin_c != '':
-            return admin_c
-        elif admin_c == '' and as_name != '':
-            return as_name
-        elif admin_c == '' and as_name == '' and descr != '':
-            return descr
-        else:
-            return mntr
-    return ''
+    try:
+        async with aiofiles.open(f"{_registry}/data/aut-num/AS{asn}", mode='r') as f:
+            admin_c = ''
+            mntr = ''
+            as_name = ''
+            descr = ''
+            async for line in f:
+                _line = line.strip()
+                kv = _line.split('admin-c:')
+                if len(kv) == 2:
+                    admin_c = kv[1].strip()
+                    continue
+                kv = _line.split('mnt-by:')
+                if len(kv) == 2:
+                    mntr = kv[1].strip()
+                    continue
+                kv = _line.split('as-name:')
+                if len(kv) == 2:
+                    as_name = kv[1].strip()
+                    continue
+                kv = _line.split('descr:')
+                if len(kv) == 2:
+                    descr = kv[1].strip()
+                    continue
+            if admin_c == mntr:
+                return mntr
+            elif admin_c != '':
+                return admin_c
+            elif admin_c == '' and as_name != '':
+                return as_name
+            elif admin_c == '' and as_name == '' and descr != '':
+                return descr
+            else:
+                return mntr
+    return f'AS{asn}'
 
 
 async def getWhoisByASN(asn):
