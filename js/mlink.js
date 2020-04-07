@@ -35,6 +35,7 @@ function l_cas(n) {
 
 	if (asdb[n] == null)
 		return 1;
+
 	o3 = '<pre>';
 	for (i = 0; i < asdb[n]['c'] && asdb[n][i]; i++) {
 		if (i && !(i % 3))

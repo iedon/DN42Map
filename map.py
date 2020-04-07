@@ -24,7 +24,7 @@ except ImportError:
 
 
 _port = 8125
-_host_asn = 4242422189
+#_host_asn = 4242422189
 _root_directory = "/dev/shm"
 _registry = f"{_root_directory}/registry"
 _headers = {
@@ -34,7 +34,7 @@ _headers = {
     'Access-Control-Max-Age': '3600',
     'Cache-Control': 'max-age=60'
 }
-_updateIntervalSeconds = 30
+_updateIntervalSeconds = 15 * 60
 _asn = []
 _links = []
 
@@ -114,16 +114,20 @@ async def checkAndAddASN(asnArr, asn):
 
 
 async def checkAndAddLink(asnArr, linkArr, asn1, asn2):
+    asn1_int = int(asn1)
+    asn2_int = int(asn2)
+    if asn1_int == asn2_int:
+        return
     asn1_index = 0
     asn2_index = 0
     found_asn1 = False
     found_asn2 = False
     asn_len = len(asnArr)
     for i in range(0, asn_len):
-        if asnArr[i]['asn'] == int(asn1):
+        if asnArr[i]['asn'] == asn1_int:
             asn1_index = i
             found_asn1 = True
-        if asnArr[i]['asn'] == int(asn2):
+        if asnArr[i]['asn'] == asn2_int:
             asn2_index = i
             found_asn2 = True
         if found_asn1 and found_asn2:
@@ -137,8 +141,8 @@ async def checkAndAddLink(asnArr, linkArr, asn1, asn2):
             return
 
     linkArr.append({
-        'source': int(asn1_index),
-        'target': int(asn2_index),
+        'source': asn1_index,
+        'target': asn2_index,
         'value': 1
     })
 
@@ -175,8 +179,8 @@ async def updatePath():
                     link_count = len(paths) - 1
                     if link_count == 0 and paths[0] == '':
                         continue
-                    paths.insert(0, str(_host_asn))
-                    link_count = link_count + 1
+                    # paths.insert(0, str(_host_asn))
+                    # link_count = link_count + 1
                     for i in range(link_count):
                         await checkAndAddASN(asn, paths[i])
                         await checkAndAddASN(asn, paths[i + 1])
