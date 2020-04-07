@@ -1,2 +1,2 @@
-*/1 * * * * /usr/sbin/birdc show route all | grep BGP.as_path > /dev/shm/aspath.txt
+*/20 * * * * bash /root/update_aspath.sh
 */30 * * * * bash /root/map.sh
